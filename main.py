@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from transformers import Wav2Vec2Processor, Wav2Vec2Model
 from model import CNN_GRU_Model, extract_features_from_audio, idx2label, label2idx
-
+import uvicorn
 app = FastAPI()
 
 app.add_middleware(
@@ -125,3 +125,6 @@ async def predict_intent_endpoint(file: UploadFile = File(...)):
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # default to 8000 for local dev
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
